@@ -121,7 +121,7 @@
         <td>{{info.promocode}}</td>
         <td> {{info.email_id}} </td>
         <td> {{info.type}} </td>
-        <td> {{info.updatedAt}} </td>
+        <td> <span>{{info.updatedAt | moment("Do MMM  YYYY")}}</span> </td>
         <td> 
           <toggle-button :value="info.status" :sync="true" :labels="true"/>
         </td>
@@ -227,24 +227,39 @@ export default {
     getUser: function() {
       this.getUserData();
     },
-    addData: function() {
-      this.addUserData({
-        email: this.email,
-        type: this.selected,
-        comments: this.textarea
-      });
-      this.data = "";
-      this.email = "";
-      this.checkbox = "";
-      this.textarea = "";
-      this.selected = "";
+    addData: async function() {
+      try {
+        var response = await this.addUserData({
+           email: this.email,
+           type: this.selected,
+           comments: this.textarea
+         })
+         if(response){
+          this.getUser();
+         }
+         this.data = "";
+         this.email = "";
+         this.checkbox = "";
+         this.textarea = "";
+         this.selected = "";
+      }
+      catch(err){
+        console.log(err, 'err')
+      }
     },
-    viewComment: function(info) {
-      this.viewComments({
-        _id: info._id,
-        comment: info.comments,
-        status: info.status
-      });
+    viewComment:async function(info) {
+      try{
+        var response = await this.viewComments({
+          _id: info._id,
+          comment: info.comments,
+          status: info.status
+        });
+        if(response) {
+          this.getUser();
+        }
+      } catch (err) {
+        console.log(err, 'err')
+      }
     },
     showModal: function(info) {
       this.showmodal = true;

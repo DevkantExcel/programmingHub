@@ -8,7 +8,7 @@ export default {
         selected: '',
         message: '',
         reason: '',
-        users: []
+        users: [],
     },
     mutations: {
         setUserData(state, data) {
@@ -44,7 +44,7 @@ export default {
         showData: state => state,
         showMessage: state => state.message,
         showReason: state => state.reason,
-        showUsers: state =>  state.users
+        showUsers: state =>  state.users,
     },
     actions: {
         async getUserData ({commit}) {
@@ -54,8 +54,8 @@ export default {
         
       });
         },
-        addUserData( {commit}, payload) {
-            Axios.post(
+       async addUserData( payload) {
+          return await Axios.post(
                 "https://devapi.programminghub.io/v2/api/payment/addFailurePayment",
                 payload, {
                     body: {
@@ -64,14 +64,10 @@ export default {
                         comments: payload.comments
                     }
                 }
-            ).then((response) => {
-                if(response.data) {
-                dispatch('getUserData');
-                }
-           });
+            )
         },
-        viewComments({ commit }, payload ) {
-            Axios.post(
+        async viewComments({ commit }, payload ) {
+            return await Axios.post(
                 "https://devapi.programminghub.io/v2/api/payment/update/status",
                 payload, {
                     body: {
@@ -80,9 +76,7 @@ export default {
                         status: payload.status
                     }
                 }
-            ).then((response) => { 
-                commit('setResponse', response.data)
-            });
+            )
         },
 
     }
