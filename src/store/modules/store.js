@@ -8,7 +8,9 @@ export default {
         selected: '',
         message: '',
         reason: '',
-        users: []
+        users: [],
+        baseUrlAddUserData: 'https://devapi.programminghub.io/v2/api/payment/addFailurePayment',
+        baseUrlUserComments: 'https://devapi.programminghub.io/v2/api/payment/update/status',
     },
     mutations: {
         setUserData(state, data) {
@@ -38,7 +40,7 @@ export default {
         setResponse (state, msg) {
             state.message = msg.message;
             state.reason = msg.Reason;
-        }
+        },
     },
     getters: {
         showData: state => state,
@@ -56,7 +58,7 @@ export default {
         },
         addUserData( {commit}, payload) {
             Axios.post(
-                "https://devapi.programminghub.io/v2/api/payment/addFailurePayment",
+                'https://devapi.programminghub.io/v2/api/payment/addFailurePayment',
                 payload, {
                     body: {
                         email_id: payload.email,

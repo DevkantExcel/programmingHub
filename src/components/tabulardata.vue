@@ -1,6 +1,14 @@
 <template>
   <div class="container">
-    <h1 class="logo-desc" >Programming Hub</h1>
+    <p class="btn-float-right" >
+      View Mode:
+    <select class="form-control" v-model="selected">
+      <option value="localhost:8000/v2/api/payment/update/status" selected>Dev</option>
+      <option value="https://devapi.programminghub.io/v2/api/payment/update/status">Prod</option>
+    </select>
+    </p>
+    {{ selected }}
+    <h1 class="logo-desc">Programming Hub</h1>
 
     <!-- modal add QUery -->
     <div class="container">
@@ -123,7 +131,8 @@
         <td> {{info.type}} </td>
         <td> {{info.updatedAt}} </td>
         <td> 
-          <toggle-button :value="info.status" :sync="true" :labels="true"/>
+          <!-- <toggle-button :value="info.status" :sync="true" :labels="true"/> -->
+          {{ info.status==null? false: info.status }}
         </td>
         <td> 
           <button type="button" @click="showModal(info)" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal1">View Comments</button>
@@ -160,7 +169,8 @@ export default {
       showmodal: false,
       userInfo: null,
       comments: null,
-      currentPage: 3
+      currentPage: 3,
+      selected: ''
     };
   },
   computed: {
