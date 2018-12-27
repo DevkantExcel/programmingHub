@@ -1,156 +1,192 @@
 <template>
-  <div class="container">
-    <p class="btn-float-right" >
+  <div class="panel-body">
+    <!-- <p class="btn-float-right">
       View Mode:
-    <select class="form-control" v-model="selected">
-      <option value="localhost:8000/v2/api/payment/update/status" selected>Dev</option>
-      <option value="https://devapi.programminghub.io/v2/api/payment/update/status">Prod</option>
-    </select>
-    </p>
-    {{ selected }}
+      <select class="form-control" v-model="selectedMode" @change="getUser">
+        <option value="https://devapi.programminghub.io/v2/api/payment" selected>Dev</option>
+        <option value="https://api.programminghub.io/v2/api/payment">Prod</option>
+      </select>
+    </p>-->
+    <!-- <ball-triangle-path-loader  color="#000000" size="20px"></ball-triangle-path-loader> -->
+    <h4 v-if="showUsers.Message">Message: {{ showUsers.Message }}</h4>
     <h1 class="logo-desc">Programming Hub</h1>
 
     <!-- modal add QUery -->
     <div class="container">
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Add Query</h4>
-        </div>
-        <div class="modal-body">
-          <!-- form -->
-          <form class="customWidthhundred" @submit.prevent>
-          <table class="customWidthhundred" > 
-            <thead>
-              <tr>
-                <th>
-                  #
-                </th>
-                <th>
-                  #
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><label for="email">Email:</label></td>
-              <td><input v-model="email" type="email" class="form-control" id="email" placeholder="Enter email" name="email"></td>
-            </tr>
-            <tr>
-              <td><label for="type">Type:</label></td>
-              <td>
-                <select v-model="selected" class="customColorSelect">
-                  <option value="Monthly" selected="selected">Monthly</option>
-                  <option value="Yearly">Yearly</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td><label for="comments">Comments:</label></td>
-              <td><textarea  v-model="textarea" class="form-control" rows="5" id="comment"></textarea></td>
-            </tr>
-            <tr >
-              <td colspan="2" >
-                <button type="submit" class="btn btn-default" @click="addData" data-dismiss="modal" >Submit</button>
-              </td>
-            </tr>
-            </tbody>
-            </table>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Add Query</h4>
+            </div>
+            <div class="modal-body">
+              <!-- form -->
+              <form class="customWidthhundred" @submit.prevent>
+                <table class="customWidthhundred">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>#</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <label for="email">Email:</label>
+                      </td>
+                      <td>
+                        <input
+                          v-model="email"
+                          type="email"
+                          class="form-control"
+                          id="email"
+                          placeholder="Enter email"
+                          name="email"
+                        >
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="type">Type:</label>
+                      </td>
+                      <td>
+                        <select v-model="addQuerySel" class="customColorSelect">
+                          <option value="Monthly">Monthly</option>
+                          <option value="Yearly">Yearly</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="comments">Comments:</label>
+                      </td>
+                      <td>
+                        <textarea v-model="textarea" class="form-control" rows="5" id="comment"></textarea>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <button
+                          type="submit"
+                          class="btn btn-default"
+                          @click="addData"
+                          data-dismiss="modal"
+                        >Submit</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
         </div>
       </div>
-      
     </div>
-  </div>
-  
-</div>
     <!-- end modal add Query -->
-
-
     <!-- modal comments -->
     <div class="container">
-  <!-- Modal -->
-  <div class="modal fade" id="myModal1" role="dialog" v-if="showmodal">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Comments</h4>
-        </div>
-        <div class="modal-body">
-         <!-- Reason: {{ showReason }} <br/>
-         Message: {{ showMessage }} -->
-         Comment: <textarea  v-model="userInfo.comments"  ></textarea><br/>
-         <!-- Status: {{userInfo.status}} -->
-         Status:
-         <label class="switch">
-            <input  v-model="userInfo.status" type="checkbox">
-              <span class="slider round"></span>
-        </label>
-         <button  data-dismiss="modal" class="btn btn-primary btn-float-right" @click="viewComment(userInfo)" >Update</button> 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <!-- Modal -->
+      <div class="modal fade" id="myModal1" role="dialog" v-if="showmodal">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Comments</h4>
+            </div>
+            <div class="modal-body">
+              <!-- Reason: {{ showReason }} <br/>
+              Message: {{ showMessage }}-->
+              Comment:
+              <textarea v-model="userInfo.comments"></textarea>
+              <br>
+              <!-- Status: {{userInfo.status}} -->
+              Status:
+              <label class="switch">
+                <input v-model="userInfo.status" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+              <button
+                data-dismiss="modal"
+                class="btn btn-primary btn-float-right"
+                @click="viewComment(userInfo)"
+              >Update</button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
         </div>
       </div>
-      
     </div>
-  </div>
-  
-</div>
 
+    <!-- loader -->
+    <div v-if="loader">
+      <ball-triangle-path-loader color="#000000" size="20px"></ball-triangle-path-loader>
+    </div>
+    <!-- loader ends -->
     <!--END modal comments -->
-    <table class="table table-hover">
-    <thead>
-      <tr>
-        <th colspan="6" class="customBg">
-          <button type="button" class="btn btn-float-right" data-toggle="modal" data-target="#myModal">Add Query</button>
-        </th>
-      </tr>
-      <tr>
-        <th>Promocode</th>
-        <th>Email</th>
-        <th>Type</th>
-        <th>Last Updated</th>
-        <th>Status</th>
-        <th>Comments</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(info, index) in showUsers" :key="index" >
-        <td>{{info.promocode}}</td>
-        <td> {{info.email_id}} </td>
-        <td> {{info.type}} </td>
-        <td> <span>{{info.updatedAt | moment("Do MMM  YYYY")}}</span> </td>
-        <td> 
-          <!-- <toggle-button :value="info.status" :sync="true" :labels="true"/> -->
-          {{ info.status==null? false: info.status }}
-        </td>
-        <td> 
-          <button type="button" @click="showModal(info)" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal1">View Comments</button>
-          <!-- <button type="button" class="btn btn-primary btn-sm">View Comments</button> -->
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <!--start pagination -->
+    <table v-show="!loader" class="table table-hover">
+      <thead>
+        <tr>
+          <th colspan="6" class="customBg">
+            <button
+              type="button"
+              class="btn btn-float-right"
+              data-toggle="modal"
+              data-target="#myModal"
+            >Add Query</button>
+          </th>
+        </tr>
+        <tr>
+          <th>Promocode</th>
+          <th>Email</th>
+          <th>Type</th>
+          <th>Last Updated</th>
+          <th>Status</th>
+          <th>Comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(info, index) in showUsers.data" :key="index">
+          <td>{{info.promocode}}</td>
+          <td>{{info.email_id}}</td>
+          <td>{{info.type}}</td>
+          <td>
+            <span>{{info.updatedAt | moment("Do MMM YYYY")}}</span>
+          </td>
+          <td>
+            <!-- <toggle-button :value="info.status" :sync="true" :labels="true"/> -->
+            {{ info.status==null? false: info.status }}
+          </td>
+          <td>
+            <button
+              type="button"
+              @click="showModal(info)"
+              class="btn btn-primary btn-sm"
+              data-toggle="modal"
+              data-target="#myModal1"
+            >View Comments</button>
+            <!-- <button type="button" class="btn btn-primary btn-sm">View Comments</button> -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!--start pagination -->
     <!-- <div>
     <h6>Default</h6>
     <b-pagination size="md" :total-rows="100" v-model="currentPage" :per-page="10">
     </b-pagination>
     <br>
     <div>currentPage: {{currentPage}}</div>
-  </div>  -->
-  <!--end pagination -->
-
+    </div>-->
+    <!--end pagination -->
   </div>
 </template>
 
@@ -159,18 +195,23 @@ import Vue from "vue";
 import { mapGetters, mapActions } from "vuex";
 import ToggleButton from "vue-js-toggle-button";
 import Paginate from "vuejs-paginate";
+
+import "vue-loaders/dist/vue-loaders.css";
+import * as VueLoaders from "vue-loaders";
+Vue.use(VueLoaders);
+
 Vue.component("paginate", Paginate);
 Vue.use(ToggleButton);
 export default {
   name: "tabulardata",
   data() {
     return {
-      data: '',
+      data: "",
       showmodal: false,
       userInfo: null,
       comments: null,
       currentPage: 3,
-      selected: ''
+      selectedMode: "https://devapi.programminghub.io/v2/api/payment"
     };
   },
   computed: {
@@ -178,7 +219,8 @@ export default {
       showData: "showData",
       showMessage: "showMessage",
       showReason: "showReason",
-      showUsers: "showUsers"
+      showUsers: "showUsers",
+      loader: "showLoader"
     }),
     email: {
       set: function(val) {
@@ -227,48 +269,61 @@ export default {
       get: function() {
         return this.showData.reason;
       }
+    },
+    addQuerySel: {
+      set: function(val) {
+        this.$store.commit("updateAddQuerySel", val);
+      },
+      get: function() {
+        return this.showData.addQuerySel;
+      }
     }
   },
   mounted() {
-    this.getUser()
+    this.getUser();
   },
   methods: {
     ...mapActions(["addUserData", "viewComments", "getUserData"]),
     getUser: function() {
-      this.getUserData();
+      this.getUserData({
+        mode: this.selectedMode
+      });
     },
     addData: async function() {
       try {
         var response = await this.addUserData({
-           email: this.email,
-           type: this.selected,
-           comments: this.textarea
-         })
-         if(response){
+          mode: this.selectedMode,
+          email: this.email,
+          type: this.selected,
+          comments: this.textarea
+        });
+        if (response) {
           this.getUser();
-         }
-         this.data = "";
-         this.email = "";
-         this.checkbox = "";
-         this.textarea = "";
-         this.selected = "";
-      }
-      catch(err){
-        console.log(err, 'err')
+        }
+        this.data = "";
+        this.email = "";
+        this.checkbox = "";
+        this.textarea = "";
+        this.selected = "";
+      } catch (err) {
+        // eslint-disable-next-line
+        console.log(err, "err");
       }
     },
-    viewComment:async function(info) {
-      try{
+    viewComment: async function(info) {
+      try {
         var response = await this.viewComments({
+          mode: this.selectedMode,
           _id: info._id,
           comment: info.comments,
           status: info.status
         });
-        if(response) {
+        if (response) {
           this.getUser();
         }
       } catch (err) {
-        console.log(err, 'err')
+        // eslint-disable-next-line
+        console.log(err, "err");
       }
     },
     showModal: function(info) {
